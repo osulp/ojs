@@ -1,13 +1,13 @@
 #headerNavigationContainer, body {
-  background: #bfb39e url(http://journals3.library.oregonstate.edu/public/journals/1/olaq_background.gif) center repeat;
+  background: #bfb39e url(/public/journals/1/olaq_background.gif) center repeat;
 }
 
-#headerNavigationContainer > div > nav.pkp_navigation_primary_row {
+#headerNavigationContainer > div > nav.pkp_site_nav_menu {
   background: #3a3027;
   padding-left: 15px;
 }
 
-.pkp_navigation_primary ul a {
+ul.pkp_navigation_primary ul.dropdown-menu li a {
   color: #585300;
 }
 
@@ -74,7 +74,7 @@ body > div.pkp_structure_page > div.pkp_structure_content.has_sidebar > div.pkp_
   color: #585300 !important;
 }
 
-#pkp_content_footer {
+.pkp_structure_footer_wrapper {
   background: transparent;
 }
 
@@ -87,7 +87,7 @@ body > div.pkp_structure_page > div.pkp_structure_content.has_sidebar > div.pkp_
   display: none;
 }
 
-#pkp_content_footer a {
+.pkp_footer_content p a {
   color: #dddddd;
 }
 
