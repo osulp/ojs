@@ -11,6 +11,18 @@ ul.pkp_navigation_primary ul.dropdown-menu li a {
   color: #585300;
 }
 
+.pkp_navigation_search_wrapper a.pkp_search {
+  color: #ffffff;
+}
+
+.pkp_navigation_search_wrapper a.pkp_search:focus {
+  color: #585300;
+}
+
+.pkp_site_nav_menu a {
+  color: #ffffff !important;
+}
+
 .pkp_nav_list ul li:hover > a:hover {
   border-left: 5px solid #585300;
 }
