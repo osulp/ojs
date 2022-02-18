@@ -1,0 +1,101 @@
+#headerNavigationContainer, body {
+  background: #bfb39e url(/public/journals/1/olaq_background.gif) center repeat;
+}
+
+#headerNavigationContainer > div > nav.pkp_navigation_primary_row {
+  background: #3a3027;
+  padding-left: 15px;
+}
+
+.pkp_navigation_primary ul a {
+  color: #585300;
+}
+
+.pkp_nav_list ul li:hover > a:hover {
+  border-left: 5px solid #585300;
+}
+
+.pkp_structure_head {
+  border-bottom: 0px;
+}
+
+.pkp_structure_content {
+  padding-top: 0px;
+  background-color: #ffffff;
+}
+
+#pkp_content_main {
+  background: #ffffff;
+}
+
+body > div.pkp_structure_page > div.pkp_structure_content.has_sidebar > div.pkp_structure_sidebar.left {
+  background: #ffffff;
+}
+
+.pkp_site_name {
+  text-align: center;
+}
+
+.pkp_site_name .is_img img {
+  max-height: none;
+}
+
+.galleys_links {
+  list-style-type: none;
+  padding-inline-start: 0px;
+}
+
+.obj_galley_link {
+  border: 1px solid #585300;
+  font-size: 16px;
+}
+
+.pdf:before {
+  color: red;
+  font-size: 18px;
+  margin-top: 6px;
+}
+
+.obj_galley_link:hover, .obj_galley_link:focus {
+  background: #585300;
+  color: #ffffff;
+}
+
+.obj_issue_toc .sections:not(:first-child) {
+  margin-top: 0px;
+}
+
+.obj_issue_toc .galleys, .obj_issue_toc .section {
+  padding-bottom: 0px;
+}
+
+.read_more, .read_more::after {
+  padding-top: 50px;
+  color: #585300 !important;
+}
+
+#pkp_content_footer {
+  background: transparent;
+}
+
+.pkp_structure_footer {
+  background: #3a3027;
+  color: #ffffff;
+}
+
+.pkp_brand_footer {
+  display: none;
+}
+
+#pkp_content_footer a {
+  color: #dddddd;
+}
+
+
+a:link, a:visited {
+  color: #585300;
+}
+
+a:hover, a:active, a:focus {
+  color: #000000;
+}
