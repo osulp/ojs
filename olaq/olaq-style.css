@@ -19,7 +19,7 @@ ul.pkp_navigation_primary ul.dropdown-menu li a {
   color: #585300;
 }
 
-.pkp_site_nav_menu a {
+.pkp_site_nav_menu > div > div > li > a {
   color: #ffffff !important;
 }
 
