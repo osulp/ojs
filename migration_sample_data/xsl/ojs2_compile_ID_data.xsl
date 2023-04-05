@@ -66,7 +66,7 @@
             <xsl:variable name="issue_id" select="public_id"/>
             <xsl:variable name="journal_title" select="journal_title"/>
             <xsl:variable name="issue_volnum" select="volume"/>
-            <xsl:variable name="issue_issnum" select="issue"/>
+            <xsl:variable name="issue_issnum" select="number"/>
             <xsl:variable name="issue_year" select="year"/>
             
             <xsl:value-of select="$newline"/>
