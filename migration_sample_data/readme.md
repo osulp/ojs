@@ -20,7 +20,9 @@ The XSL transform stylesheet `ojs2-ojs3_1_4_transform.xsl` was used to transform
 
 The XML document `ojs2_mets_data.xml` is essentially a structured list of every bit of content in OJS2, crucially including the OJS2 submission IDs and URLs to full text items. It was compiled from a directory of OJS2 METS exports using the additional XSL transform `ojs2_compile_METS.xsl` and is up to date as of end of March 2023.
 
-The XML schema was significantly changed for 3.3, and we do not currently have a functional transform from OJS2 to OJS 3.3. The schema files are available on Github:
+The XML schema was significantly changed for 3.3 and the `ojs2-ojs3_3_0_transform.xsl` stylesheet is a work in progress to transform OJS2 exports for OJS 3.3.0. As of June 2023 the output can be uploaded with the Native XML import tool but several bugs are still being addressed.  
+
+The OJS Native schema files are available on Github:
 
 * native.xsd https://github.com/pkp/ojs/blob/stable-3_3_0/plugins/importexport/native/native.xsd; which includes:
 * pkp-native.xsd https://github.com/pkp/pkp-lib/blob/stable-3_3_0/plugins/importexport/native/pkp-native.xsd; which includes:
