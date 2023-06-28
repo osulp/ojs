@@ -2,13 +2,12 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0">
 
-    <!-- This stylesheet is a main component of OSU Emerging Technologies and Services' project
+    <!-- This stylesheet is a main component of OSU Library Information Technology's project
         to migrate journals from Open Journal Systems (OJS) version 2 to version 3.3.0. 
         
         It takes as input the XML exported from OJS2 using the 'Articles & Issues XML Plugin.'
         
-        It uses a secondary source to fetch Public Identifiers and Galley Identifiers, to 
-        preserve the original IDs (and thus URLs) from OJS2 items. 
+        It uses a secondary source to fetch Public Identifiers and Galley Identifiers.
         This secondary source is the output of the XSL stylesheet 'ojs2_compile_METS.xsl' which 
         is generated from XML exported from OJS2 using the 'METS XML Export Plugin.'
         
@@ -40,9 +39,6 @@
                 <!-- construct vol_iss id for multiple uses -->
                 <xsl:variable name="vol_iss" select="concat(volume, '_', number)"/>
                 <!-- construct internal id to use for filename and to match METS data -->
-                
-                
-                <!-- REFACTOR: Is METS data match needed? may omit from above comment and below logic. -->
                 
                 
                 <xsl:variable name="issue_internal_id" select="concat($journal_id, '_', $vol_iss)"/>
@@ -87,7 +83,8 @@
                             </xsl:choose>
                         </xsl:attribute>
                         <xsl:attribute name="access_status" select="'1'"/>
-                        <!-- NOTE TO SELF: Change here on 4/6/23 means that url_path is only set if explicitly declared in OJS2, and otherwise omitted. Can rewrite to force a blank value if needed. -->
+                        
+                        <!-- set url_path only if explicitly declared in OJS2, otherwise omit -->
                         <xsl:if test="@public_id != ''">
                             <xsl:attribute name="url_path" select="@public_id"/>
                         </xsl:if>
@@ -213,53 +210,20 @@
                             </covers>
                         </xsl:if>
 
-                        <!-- Issue Galleys -->
-                        <!-- REFACTOR: Section here should be for issue galleys; 
-                            need an OJS2 source file that has one. 
-                            Unless they don't get exported...? I know I've posted them manually.
-                            
-                            Exported file has structure as follows:
-                            
-                            <issue_galleys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-    <issue_galley locale="en_US">
-      <label>PDF</label>
-      <id type="internal" advice="ignore">143</id>
-      <issue_file>
-        <file_name>774-154-PB.pdf</file_name>
-        <file_type>application/pdf</file_type>
-        <file_size>1916204</file_size>
-        <content_type>1</content_type>
-        <original_file_name>OLAQ-Winter 2022.pdf</original_file_name>
-        <date_uploaded>2022-03-18</date_uploaded>
-        <date_modified>2022-03-18</date_modified>
-        <embed encoding="base64">...</embed>
-        </issue_file>
-        </issue_galley>
-        </issue_galleys>
-        -->
-                 <!-- REFACTOR: STOPPED HERE on 5/3 AM -->       
+                        <!-- Issue Galleys would be here but are not included in OJS 2 export and will be added manually --> 
+                        <issue_galleys/>
                         
                         <!-- create articles container and replicate article metadata within -->
                         <articles>
+                            
                             <xsl:for-each select="section/article">
+                                
                                 <!-- construct internal id and use to match METS data -->
                                 <xsl:variable name="article_internal_id"
                                     select="concat($issue_internal_id, '_', format-number(position(), '00'))"/>
+                                
                                 <xsl:variable name="article_mets_record"
                                     select="$issue_mets_record/articles/article[@id = $article_internal_id]"/>
-                                <!-- pull public identifier from mets_data
-                                        unless a custom Public ID exists in XML -->
-                                <!--<xsl:variable name="article_public_id">
-                                    <xsl:choose>
-                                        <xsl:when test="@public_id">
-                                            <xsl:value-of select="@public_id"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:value-of select="$article_mets_record/public_id"/>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </xsl:variable>-->
 
                                 <article>
 
@@ -286,8 +250,9 @@
                                     </id>
 
                                     <!-- construct OJS3 submission file information from OJS2 galley information -->
-
-                                    <xsl:for-each
+                                    <!-- TEST: Import with no files -->
+                                   
+                                    <!--<xsl:for-each
                                         select="*[contains(name(), 'galley')][file/*[text()]]">
                                         <xsl:variable name="galley_filetype"
                                             select="file/embed/@mime_type"/>
@@ -322,15 +287,18 @@
                                             </xsl:with-param>
                                             <xsl:with-param name="file_size"
                                                 select="$galley_mets_record/file_size"/>
-                                            <xsl:with-param name="public_id"
-                                                select="$galley_mets_record/public_id"/>
+                                            <!-\- TEST: set galley file @public_id to 0 -\->
+                                            <!-\-<xsl:with-param name="public_id"
+                                                select="$galley_mets_record/public_id"/>-\->
+                                            <xsl:with-param name="public_id" select="$galley_mets_record/public_id"/>
                                             <xsl:with-param name="stage" select="'proof'"/>
                                         </xsl:call-template>
-                                    </xsl:for-each>
+                                    </xsl:for-each>-->
 
-                                    <!-- supplementary file information -->
-                                    <xsl:for-each select="supplemental_file[file/embed/text()]">
-                                        <!-- get supplementary file information from METS -->
+                                    <!-- supplementary file information
+                                        NOT WORKING; SKIPPING FOR EXPEDITED MIGRATION and will add manually  -->
+                                    <!--<xsl:for-each select="supplemental_file[file/embed/text()]">
+                                        <!-\- get supplementary file information from METS -\->
                                         <xsl:variable name="supp_internal_id"
                                             select="concat($article_internal_id, '_s', format-number(position(), '00'))"/>
                                         <xsl:variable name="supp_file_mets"
@@ -364,11 +332,12 @@
                                             <xsl:with-param name="file_type"
                                                 select="$supp_file_mets/supp_type"/>
                                         </xsl:call-template>
-                                    </xsl:for-each>
+                                    </xsl:for-each>-->
 
 
                                     <!-- handle image and media files within htmlgalley as artwork_file -->
-                                    <xsl:for-each-group select="htmlgalley/image"
+                                    <!-- TEST: Import with no files -->
+                                    <!--<xsl:for-each-group select="htmlgalley/image"
                                         group-by="embed/@mime_type">
                                         <xsl:variable name="media_type" select="embed/@mime_type"/>
                                         <xsl:variable name="mets_group"
@@ -403,7 +372,7 @@
                                                 <xsl:with-param name="stage" select="'dependent'"/>
                                             </xsl:call-template>
                                         </xsl:for-each>
-                                    </xsl:for-each-group>
+                                    </xsl:for-each-group>-->
 
                                     <!-- add publication container element -->
                                     <publication>
@@ -416,8 +385,16 @@
                                             <xsl:attribute name="url_path" select="@public_id"/>
                                         </xsl:if>
                                         <xsl:attribute name="seq" select="'0'"/>
-                                        <xsl:attribute name="date_published" select="date_published"/>
-                                        <!-- set section_ref attribute using containing section abbreviation -->
+                                        <xsl:attribute name="date_published">
+                                            <xsl:choose>
+                                                <xsl:when test="date_published[text()]">
+                                                    <xsl:value-of select="date_published"/>
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <xsl:value-of select="ancestor::issue/date_published"/>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </xsl:attribute>                                        <!-- set section_ref attribute using containing section abbreviation -->
                                         <xsl:attribute name="section_ref"
                                             select="parent::section/abbrev"/>
                                         <xsl:attribute name="access_status" select="'0'"/>
@@ -532,6 +509,11 @@
                                                 <xsl:value-of select="normalize-space(.)"/>
                                             </xsl:element>
                                         </xsl:for-each>
+                                        <xsl:if test="not(permissions/copyright_year)">
+                                            <copyright_year>
+                                                <xsl:value-of select="ancestor::issue/year"/>
+                                            </copyright_year>
+                                        </xsl:if>
 
                                         <xsl:if
                                             test="indexing/discipline[text()] or indexing/subject[text()]">
@@ -610,6 +592,16 @@
                                                   <xsl:attribute name="id" select="'0'"/>
                                                   <!-- copy / update author subelements -->
                                                   <givenname>
+                                                      <xsl:attribute name="locale">
+                                                          <xsl:choose>
+                                                              <xsl:when test="firstname/@locale">
+                                                                  <xsl:value-of select="firstname/@locale"/>
+                                                              </xsl:when>
+                                                              <xsl:otherwise>
+                                                                  <xsl:value-of select="'en_US'"/>
+                                                              </xsl:otherwise>
+                                                          </xsl:choose>
+                                                      </xsl:attribute>
                                                   <xsl:value-of select="firstname"/>
                                                   <xsl:if test="middlename[text()]">
                                                   <xsl:text> </xsl:text>
@@ -617,6 +609,16 @@
                                                   </xsl:if>
                                                   </givenname>
                                                   <familyname>
+                                                      <xsl:attribute name="locale">
+                                                          <xsl:choose>
+                                                              <xsl:when test="lastname/@locale">
+                                                                  <xsl:value-of select="lastname/@locale"/>
+                                                              </xsl:when>
+                                                              <xsl:otherwise>
+                                                                  <xsl:value-of select="'en_US'"/>
+                                                              </xsl:otherwise>
+                                                          </xsl:choose>
+                                                      </xsl:attribute>
                                                   <xsl:value-of select="lastname"/>
                                                   </familyname>
                                                   <xsl:for-each select="affiliation">
@@ -651,9 +653,17 @@
                                                   </xsl:for-each>
                                                   <xsl:for-each select="biography">
                                                   <biography>
-                                                  <xsl:if test="@locale">
-                                                  <xsl:attribute name="locale" select="@locale"/>
-                                                  </xsl:if>
+                                                      <xsl:attribute name="locale">
+                                                          <xsl:choose>
+                                                              <xsl:when test="@locale">
+                                                                  <xsl:value-of select="@locale"/>
+                                                              </xsl:when>
+                                                              <xsl:otherwise>
+                                                                  <xsl:value-of select="'en_US'"/>
+                                                              </xsl:otherwise>
+                                                          </xsl:choose>
+                                                      </xsl:attribute>
+                                                     
                                                   <xsl:choose>
                                                   <xsl:when test="contains(., '&lt;')">
                                                   <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
@@ -675,8 +685,8 @@
                                                 <xsl:otherwise>
                                                   <author include_in_browse="true"
                                                   user_group_ref="Author">
-                                                  <givenname>Editorial</givenname>
-                                                  <familyname>Team</familyname>
+                                                  <givenname locale='en_US'>Editorial</givenname>
+                                                      <familyname locale='en_US'>Team</familyname>
                                                   <affiliation>
                                                   <xsl:value-of
                                                   select="ancestor::issue/$issue_mets_record/journal_title"
@@ -689,23 +699,23 @@
                                         </authors>
 
                                         <!-- construct OJS3 article galley sections from OJS2 galley information-->
-
+                                        <!--
                                         <xsl:for-each select="galley[file/*[text()]]">
                                             <xsl:variable name="galley_mets_record"
                                                 select="$article_mets_record/files/file[@type = 'application/pdf']"/>
                                             <xsl:call-template name="article_galley">
-                                                <!--<xsl:with-param name="galley_type" select="'pdfarticlegalleyplugin'"/>-->
+                                                <!-\-<xsl:with-param name="galley_type" select="'pdfarticlegalleyplugin'"/>-\->
                                                 <xsl:with-param name="public_id"
                                                   select="$galley_mets_record/public_id"/>
                                                 <xsl:with-param name="galley_name" select="label"/>
                                             </xsl:call-template>
-                                        </xsl:for-each>
+                                        </xsl:for-each>-->
 
-                                        <xsl:for-each select="htmlgalley[file/*[text()]]">
+                                        <!--<xsl:for-each select="htmlgalley[file/*[text()]]">
                                             <xsl:variable name="galley_mets_record"
                                                 select="$article_mets_record/files/file[@type = 'text/html']"/>
                                             <xsl:call-template name="article_galley">
-                                                <!--<xsl:with-param name="galley_type" select="'htmlarticlegalleyplugin'"/>-->
+                                                <!-\-<xsl:with-param name="galley_type" select="'htmlarticlegalleyplugin'"/>-\->
                                                 <xsl:with-param name="public_id"
                                                   select="$galley_mets_record/public_id"/>
                                                 <xsl:with-param name="galley_name" select="label"/>
@@ -718,14 +728,14 @@
                                             <xsl:variable name="supp_file_mets"
                                                 select="$article_mets_record/files/supp_file[@id = $supp_internal_id]"/>
                                             <xsl:call-template name="article_galley">
-                                                <!--<xsl:with-param name="galley_type"></xsl:with-param> -->
+                                                <!-\-<xsl:with-param name="galley_type"></xsl:with-param> -\->
                                                 <xsl:with-param name="public_id"
                                                   select="$supp_file_mets/supp_id"/>
                                                 <xsl:with-param name="galley_name"
                                                   select="normalize-space(title)"/>
                                                 <xsl:with-param name="seq" select="position()"/>
                                             </xsl:call-template>
-                                        </xsl:for-each>
+                                        </xsl:for-each>-->
 
                                         <!-- copy page numbers -->
                                         <xsl:for-each select="pages">
