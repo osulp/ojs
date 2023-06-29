@@ -510,9 +510,9 @@
                                             </xsl:element>
                                         </xsl:for-each>
                                         <xsl:if test="not(permissions/copyright_year)">
-                                            <copyright_year>
+                                            <copyrightYear>
                                                 <xsl:value-of select="ancestor::issue/year"/>
-                                            </copyright_year>
+                                            </copyrightYear>
                                         </xsl:if>
 
                                         <xsl:if
